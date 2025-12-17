@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src='https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css' rel='stylesheet' />
+  <style> body { margin: 0; } #map { height: 100vh; } </style>
+</head>
+<body>
+  <div id='map'></div>
+  <script>
+    mapboxgl.accessToken = 'pk.YOUR_TOKEN_HERE'; // Get from mapbox.com
+    const map = new mapboxgl.Map({ container: 'map', style: 'mapbox://styles/mapbox/streets-v12', center: [78, 22], zoom: 5 });
+    
+    map.on('load', () => {
+      // Add your mining layer
+      map.addSource('ncog-mining', { type: 'vector', tiles: ['https://indianopenmaps.fly.dev/not-so-open/mining/leases/minor/ncog/{z}/{x}/{y}.pbf'] });
+      map.addLayer({ id: 'ncog-fill', type: 'fill', source: 'ncog-mining', 'source-layer': 'NCOG_Minor_Mining_Leases', paint: { 'fill-color': '#ff4444', 'fill-opacity': 0.3 } });
+    });
+  </script>
+</body>
+</html>
