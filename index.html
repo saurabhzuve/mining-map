@@ -1,118 +1,138 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8" />
-  <title>Mining Map with MapLibre</title>
-  <link href="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.css" rel="stylesheet" />
-  <script src="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.js"></script>
-  <style>
-    body { margin: 0; }
-    #map { width: 100vw; height: 100vh; }
 
-    /* Simple layer control styling */
-    #layer-controls {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 1;
-      background: white;
-      padding: 8px 10px;
-      font-family: sans-serif;
-      font-size: 13px;
-      border-radius: 4px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    }
-    #layer-controls label {
-      display: block;
-      margin-bottom: 4px;
-    }
-  </style>
+<head>
+    <meta charset="utf-8" />
+    <title>Mining Map with MapLibre</title>
+    <link href="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.css" rel="stylesheet" />
+    <script src="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.js"></script>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        #map {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Simple layer control styling */
+        #layer-controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1;
+            background: white;
+            padding: 8px 10px;
+            font-family: sans-serif;
+            font-size: 13px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        #layer-controls label {
+            display: block;
+            margin-bottom: 4px;
+        }
+    </style>
 </head>
 
 <body>
-  <!-- LAYER TOGGLE UI -->
-  <div id="layer-controls">
-    <strong>Layers</strong>
-    <label>
-      <input type="checkbox" id="toggle-ncog" checked />
-      NCOG Mining Leases
-    </label>
-    <!-- Add more checkboxes here later -->
-  </div>
+    <!-- LAYER TOGGLE UI -->
+    <div id="layer-controls">
+        <strong>Layers</strong>
+        <label>
+            <input type="checkbox" id="toggle-ncog-minor" checked />
+            Minor mining leases
+        </label>
+        <label>
+            <input type="checkbox" id="toggle-ncog-major" checked />
+            Major mining leases
+        </label>
+    </div>
 
-  <div id="map"></div>
 
-  <script>
-    const style = {
-      "version": 8,
-      "sources": {
-        "esri-satellite": {
-          "type": "raster",
-          "tiles": [
-            "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-          ],
-          "tileSize": 256
-        },
-        "ncog-mining-minor": {
-          "type": "vector",
-          "tiles": [
-            "https://indianopenmaps.fly.dev/not-so-open/mining/leases/minor/ncog/{z}/{x}/{y}.pbf"
-          ],
-          "maxzoom": 10
-        },
-        "ncog-mining-major": {
-          "type": "vector",
-          "tiles": [
-            "https://indianopenmaps.fly.dev/not-so-open/mining/leases/major/ncog/{z}/{x}/{y}.pbf"
-          ],
-          "maxzoom": 10
-        }
-      },
-      "layers": [
-        {
-          "id": "esri-satellite-layer",
-          "type": "raster",
-          "source": "esri-satellite"
-        },
-        {
-          "id": "ncog-fill",
-          "type": "fill",
-          "source": "ncog-mining-minor",
-          "source-layer": "Minor_Mining_Leases",
-          "paint": {
-            "fill-color": "#ff4444",
-            "fill-opacity": 0.5
-          }
-        },
-        {
-          "id": "ncog-fill-major",
-          "type": "fill",
-          "source": "ncog-mining-major",
-          "source-layer": "Major_Mining_Leases",
-          "paint": {
-            "fill-color": "#0000ff",
-            "fill-opacity": 0.5
-          }
-        }
-      ]
-    };
+    <div id="map"></div>
 
-    const map = new maplibregl.Map({
-      container: 'map',
-      style: style,
-      center: [78, 22],
-      zoom: 5
-    });
+    <script>
+        const style = {
+            "version": 8,
+            "sources": {
+                "esri-satellite": {
+                    "type": "raster",
+                    "tiles": [
+                        "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                    ],
+                    "tileSize": 256
+                },
+                "ncog-mining-minor": {
+                    "type": "vector",
+                    "tiles": [
+                        "https://indianopenmaps.fly.dev/not-so-open/mining/leases/minor/ncog/{z}/{x}/{y}.pbf"
+                    ],
+                    "maxzoom": 10
+                },
+                "ncog-mining-major": {
+                    "type": "vector",
+                    "tiles": [
+                        "https://indianopenmaps.fly.dev/not-so-open/mining/leases/major/ncog/{z}/{x}/{y}.pbf"
+                    ],
+                    "maxzoom": 10
+                }
+            },
+            "layers": [
+                {
+                    "id": "esri-satellite-layer",
+                    "type": "raster",
+                    "source": "esri-satellite"
+                },
+                {
+                    "id": "ncog-fill",
+                    "type": "fill",
+                    "source": "ncog-mining-minor",
+                    "source-layer": "NCOG_Minor_Mining_Leases",
+                    "paint": {
+                        "fill-color": "#ff4444",
+                        "fill-opacity": 0.5
+                    }
+                },
+                {
+                    "id": "ncog-fill-major",
+                    "type": "fill",
+                    "source": "ncog-mining-major",
+                    "source-layer": "NCOG_Major_Mining_Leases",
+                    "paint": {
+                        "fill-color": "#0000ff",
+                        "fill-opacity": 0.5
+                    }
+                }
+            ]
+        };
 
-    // Wire checkbox to layer visibility
-    map.on('load', () => {
-      const checkbox = document.getElementById('toggle-ncog');
+        const map = new maplibregl.Map({
+            container: 'map',
+            style: style,
+            center: [78, 22],
+            zoom: 5
+        });
 
-      checkbox.addEventListener('change', () => {
-        const visibility = checkbox.checked ? 'visible' : 'none';
-        map.setLayoutProperty('ncog-fill', 'visibility', visibility);
-      });
-    });
-  </script>
+        // Wire checkbox to layer visibility
+        map.on('load', () => {
+            const minorCb = document.getElementById('toggle-ncog-minor');
+            const majorCb = document.getElementById('toggle-ncog-major');
+
+            minorCb.addEventListener('change', () => {
+                const vis = minorCb.checked ? 'visible' : 'none';
+                map.setLayoutProperty('ncog-fill', 'visibility', vis);
+            });
+
+            majorCb.addEventListener('change', () => {
+                const vis = majorCb.checked ? 'visible' : 'none';
+                map.setLayoutProperty('ncog-fill-major', 'visibility', vis);
+            });
+        });
+
+    </script>
 </body>
+
 </html>
