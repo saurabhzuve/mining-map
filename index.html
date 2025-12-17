@@ -1,70 +1,101 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <meta charset="utf-8" />
-    <title>Mining Map with MapLibre</title>
-    <link href="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.css" rel="stylesheet" />
-    <script src="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.js"></script>
-    <style>
-        body {
-            margin: 0;
-        }
+  <meta charset="utf-8" />
+  <title>Mining Map with MapLibre</title>
+  <link href="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.js"></script>
+  <style>
+    body { margin: 0; }
+    #map { width: 100vw; height: 100vh; }
 
-        #map {
-            width: 100vw;
-            height: 100vh;
-        }
-    </style>
+    /* Simple layer control styling */
+    #layer-controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 1;
+      background: white;
+      padding: 8px 10px;
+      font-family: sans-serif;
+      font-size: 13px;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    #layer-controls label {
+      display: block;
+      margin-bottom: 4px;
+    }
+  </style>
 </head>
 
 <body>
-    <div id="map"></div>
-    <script>
-        const map = new maplibregl.Map({
-            container: 'map',
-            style: {
-                "version": 8,
-                "sources": {
-                    // Esri World Imagery raster basemap
-                    "esri-satellite": {
-                        "type": "raster",
-                        "tiles": [
-                            "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-                        ],
-                        "tileSize": 256
-                    },
-                    // Your mining vector tiles
-                    "ncog-mining": {
-                        "type": "vector",
-                        "tiles": [
-                            "https://indianopenmaps.fly.dev/not-so-open/mining/leases/minor/ncog/{z}/{x}/{y}.pbf"
-                        ],
-                        "maxzoom": 10
-                    }
-                },
-                "layers": [
-                    {
-                        "id": "esri-satellite-layer",
-                        "type": "raster",
-                        "source": "esri-satellite"
-                    },
-                    {
-                        "id": "ncog-fill",
-                        "type": "fill",
-                        "source": "ncog-mining",
-                        "source-layer": "NCOG_Minor_Mining_Leases",  // layer name from your tiles
-                        "paint": {
-                            "fill-color": "#ff4444",
-                            "fill-opacity": 0.5
-                        }
-                    }
-                ]
-            },
-            center: [78, 22],
-            zoom: 5
-        });
-    </script>
-</body>
+  <!-- LAYER TOGGLE UI -->
+  <div id="layer-controls">
+    <strong>Layers</strong>
+    <label>
+      <input type="checkbox" id="toggle-ncog" checked />
+      NCOG Mining Leases
+    </label>
+    <!-- Add more checkboxes here later -->
+  </div>
 
+  <div id="map"></div>
+
+  <script>
+    const style = {
+      "version": 8,
+      "sources": {
+        "esri-satellite": {
+          "type": "raster",
+          "tiles": [
+            "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          ],
+          "tileSize": 256
+        },
+        "ncog-mining": {
+          "type": "vector",
+          "tiles": [
+            "https://indianopenmaps.fly.dev/not-so-open/mining/leases/minor/ncog/{z}/{x}/{y}.pbf"
+          ],
+          "maxzoom": 10
+        }
+      },
+      "layers": [
+        {
+          "id": "esri-satellite-layer",
+          "type": "raster",
+          "source": "esri-satellite"
+        },
+        {
+          "id": "ncog-fill",
+          "type": "fill",
+          "source": "ncog-mining",
+          "source-layer": "NCOG_Minor_Mining_Leases",
+          "paint": {
+            "fill-color": "#ff4444",
+            "fill-opacity": 0.5
+          }
+        }
+      ]
+    };
+
+    const map = new maplibregl.Map({
+      container: 'map',
+      style: style,
+      center: [78, 22],
+      zoom: 5
+    });
+
+    // Wire checkbox to layer visibility
+    map.on('load', () => {
+      const checkbox = document.getElementById('toggle-ncog');
+
+      checkbox.addEventListener('change', () => {
+        const visibility = checkbox.checked ? 'visible' : 'none';
+        map.setLayoutProperty('ncog-fill', 'visibility', visibility);
+      });
+    });
+  </script>
+</body>
 </html>
