@@ -1,21 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script src='https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js'></script>
-  <link href='https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css' rel='stylesheet' />
-  <style> body { margin: 0; } #map { height: 100vh; } </style>
+  <meta charset="utf-8" />
+  <title>Mining Map with MapLibre</title>
+  <link href="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.js"></script>
+  <style>
+    body { margin: 0; }
+    #map { width: 100vw; height: 100vh; }
+  </style>
 </head>
 <body>
-  <div id='map'></div>
-  <script>
-    mapboxgl.accessToken = 'pk.YOUR_TOKEN_HERE'; // Get from mapbox.com
-    const map = new mapboxgl.Map({ container: 'map', style: 'mapbox://styles/mapbox/streets-v12', center: [78, 22], zoom: 5 });
-    
-    map.on('load', () => {
-      // Add your mining layer
-      map.addSource('ncog-mining', { type: 'vector', tiles: ['https://indianopenmaps.fly.dev/not-so-open/mining/leases/minor/ncog/{z}/{x}/{y}.pbf'] });
-      map.addLayer({ id: 'ncog-fill', type: 'fill', source: 'ncog-mining', 'source-layer': 'NCOG_Minor_Mining_Leases', paint: { 'fill-color': '#ff4444', 'fill-opacity': 0.3 } });
-    });
-  </script>
+<div id="map"></div>
+<script>
+  const map = new maplibregl.Map({
+    container: 'map',
+    style: {
+      "version": 8,
+      "sources": {
+        "ncog-mining": {
+          "type": "vector",
+          "tiles": [
+            "https://indianopenmaps.fly.dev/not-so-open/mining/leases/minor/ncog/{z}/{x}/{y}.pbf"
+          ]
+        }
+      },
+      "layers": [
+        {
+          "id": "ncog-fill",
+          "type": "fill",
+          "source": "ncog-mining",
+          "source-layer": "NCOG_Minor_Mining_Leases",  // layer name from your tiles
+          "paint": {
+            "fill-color": "#ff4444",
+            "fill-opacity": 0.5
+          }
+        }
+      ]
+    },
+    center: [78, 22],
+    zoom: 5
+  });
+</script>
 </body>
 </html>
